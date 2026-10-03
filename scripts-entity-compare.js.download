@@ -1,0 +1,100 @@
+var compare_bonus=0;
+var compare_casino=0;
+var compare_game=0;
+var compare_prov=0;
+
+$(document).on('click', ".divCompare", function() {
+    var entity=$(this).attr("entity");
+    var entity_id=$(this).attr("entity_id");
+var entityQty=0;
+    if($(this).hasClass("active")) { // remove from cookies
+        var jsonEnt=getCookie("compare-"+entity);
+         if (jsonEnt ){
+            var arrEnt=JSON.parse(jsonEnt);
+            const index = arrEnt.indexOf(entity_id);
+             if (index > -1)  { // coockie could be removed in other window
+                 arrEnt.splice(index, 1);
+                 var json_str = JSON.stringify(arrEnt);
+                 setCookie("compare-"+entity,  json_str, cookieTime, '/');
+            }
+        }
+    } else {
+
+        var jsonEnt=getCookie("compare-"+entity);
+        var flag=1; // flag if need to setup cookie
+
+        if (jsonEnt == null){
+            var arrEnt=[];
+        } else {
+            var arrEnt=JSON.parse(jsonEnt);
+            if(arrEnt.includes(entity_id)) {flag = 0 }
+          if(arrEnt.length>20)  {alert("Too many bonuses in comparison list!"); flag = 2 }
+        }
+        if (flag == 1){
+            arrEnt.push(entity_id);
+            var json_str = JSON.stringify(arrEnt);
+            setCookie("compare-"+entity,  json_str, cookieTime, '/');
+        }
+
+    }
+
+    // set top compare items q-ty
+    var entityQty=setCompareItems(entity);
+// if more 2 items - display entity compare summary fancybox
+    if((entityQty>1) && !($(this).hasClass("active"))){ $("#aCompareTop").trigger("click"); }
+if(flag != 2) { // it is possible to compare only 4 items
+    $( this ).toggleClass( "active" );
+}
+
+
+    return false; //false - to prevent click event
+});
+
+
+
+$(document).on('click', ".divDelCompare", function() {
+    var entity=$(this).attr("entity");
+    var entity_id=$(this).attr("entity_id");
+    var entityQty=0;
+        var jsonEnt=getCookie("compare-"+entity);
+        if (jsonEnt ){
+            var arrEnt=JSON.parse(jsonEnt);
+            const index = arrEnt.indexOf(entity_id);
+            if (index > -1)  { // coockie could be removed in other window
+                arrEnt.splice(index, 1);
+                var json_str = JSON.stringify(arrEnt);
+                setCookie("compare-"+entity,  json_str, cookieTime, '/');
+            }
+        }
+    //$( (".el-"+entity+"-"+entity_id) ).remove();
+    // set top compare items q-ty
+    var entityQty=setCompareItems(entity);
+    // if(entityQty<1 ){
+        location.reload();
+    // }
+     //   if(entityQty<4 ){ $(".products-grid").toggleClass("products-grid-2"); $(".products-grid").toggleClass("products-grid"); }
+    return false; //false - to prevent click event
+});
+
+
+
+function setCompareItems(entity) {
+    var jsonEntCoockie  ;
+    var arrEnt=["bonus","casino","game","prov"];
+
+    var total=0;
+
+    for (var i = 0; i < arrEnt.length; i++) {
+        jsonEntCoockie=getCookie(("compare-"+arrEnt[i]));
+
+        if (jsonEntCoockie) {
+            arrTmp = JSON.parse(jsonEntCoockie);
+            window[('compare_'+arrEnt[i])]=arrTmp.length;
+        }
+
+        total+=window[('compare_'+arrEnt[i])];
+    }
+     $(".compareItemsQty").text(total);
+
+    return window['compare_'+entity];
+}

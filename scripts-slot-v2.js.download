@@ -1,0 +1,65 @@
+$(document).ready(function(){$('select').each(function(){$(this).siblings('p').text($(this).children('option:selected').text());});$('select').change(function(){$(this).siblings('p').text($(this).children('option:selected').text());});});
+$(document).ready(function(){$('.fanajax').fancybox({fitToView:false,helpers:{overlay:{locked:false}}});});
+$(document).ready(function(){$('.fancybox').fancybox({fitToView:false,helpers:{overlay:{locked:false}}});});
+$(document).ready(function(){$('.fancybox2').fancybox({fitToView:true,margin:20,helpers:{overlay:{locked:false}}});});
+$(document).ready(function(){$('.fancybox-demo').fancybox({fitToView:false,margin:0,helpers:{overlay:{locked:true}}});});
+$(document).ready(function() {
+    $(".fancybox5").fancybox({
+        maxWidth	: 800,
+        maxHeight	: 600,
+        fitToView	: true,
+        width		: '70%',
+        height		: '70%',
+        autoSize	: false,
+        closeClick	: false,
+        openEffect	: 'none',
+        closeEffect	: 'none'
+    });
+});
+$(document).on('click', ".bonusItemSpoilerTitle", function(){$(this).toggleClass('bonusItem-opened').toggleClass('bonusItem-closed').next().slideToggle();});
+$(document).ready(function(){$('.bonusItem-body').hide();});
+$(document).ready(function(){
+// SHOW/HIDE NAV
+// Hide Header on on scroll down
+    var didScroll;
+    var lastScrollTop = 0;
+    var delta = 5;
+    var navbarHeight = $('header').outerHeight();
+    $(window).scroll(function(event){
+        didScroll = true;
+    });
+    setInterval(function() {
+        if (didScroll) {
+            hasScrolled();
+            didScroll = false;
+        }
+    }, 250);
+    function hasScrolled() {
+        var st = $(this).scrollTop();
+        if(Math.abs(lastScrollTop - st) <= delta)
+            return;
+        if (st > lastScrollTop && st > navbarHeight && !$(".codehim-nav").hasClass("show-menu")){
+            $('header').removeClass('show-nav').addClass('hide-nav');
+            $(".openswipe").css({'display' : 'none'});
+
+        } else {
+            if(st + $(window).height() < $(document).height()) {
+                $('header').removeClass('hide-nav').addClass('show-nav');
+                $(".openswipe").css({'display' : 'block'});
+            }
+        }
+        lastScrollTop = st;
+    }
+});
+$(document).ready(function() {$('ul.tabsIGB li').css('cursor', 'pointer');$('ul.tabsIGB.tabsIGB1 li').click(function(){var thisClass = this.className.slice(0,2);$('div.v1').hide();$('div.v2').hide();$('div.v3').hide();$('div.v4').hide();$('div.v5').hide();$('div.' + thisClass).show();$('ul.tabsIGB.tabsIGB1 li').removeClass('tab-currentIGB');$(this).addClass('tab-currentIGB');});});
+$(document).ready(function() {$('ul.tabsIGB.tabsIGB2 li').click(function(){var thisClass = this.className.slice(0,2);$('div.t1').hide();$('div.t2').hide();$('div.t3').hide();$('div.t4').hide();$('div.' + thisClass).show();$('ul.tabsIGB.tabsIGB2 li').removeClass('tab-currentIGB');$(this).addClass('tab-currentIGB');});});
+$(window).scroll(function(){100<jQuery(this).scrollTop()?jQuery("#back-top a").fadeIn():jQuery("#back-top a").fadeOut()}),$("#back-top a").click(function(){return $("body,html").stop(!1,!1).animate({scrollTop:0},500),!1});
+
+/* .main_page a - does not work for ajax fancy box. On click ajax fancybox displayed error :(
+* for this reason was added class .anav */
+$(document).ready(function(){$('.main_page .anav').on('click',
+    function(e){var anchor = $(this);$('html, body').stop().animate(
+        {scrollTop: $(anchor.attr('href')).offset().top}, 777);e.preventDefault();return false;});});
+
+$(document).on('click',"#close-floating-block",function(){$("#floating-div").fadeOut( "fast");});
+$(document).ready(function(){let limit = 1800,top = 0;const fix = $('.fixed_widget');$(window).on('scroll', function() {top = $(this).scrollTop();if (top >= limit) {!fix.hasClass('showed') && fix.addClass('showed').removeClass('hidden');} else {!fix.hasClass('hidden') && fix.addClass('hidden').removeClass('showed');}})});

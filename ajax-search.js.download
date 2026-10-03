@@ -1,0 +1,61 @@
+var lang=$("#frm-search-lang").val();
+
+var bestPictures = new Bloodhound({
+
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    remote: {
+
+        url: '/json.php?blck=topSrch&lang='+lang+'&search_input=%QUERY',
+        wildcard: '%QUERY'
+    }
+});
+
+
+$('#scrollable-dropdown-menu .typeahead').typeahead(null, {
+    name: 'SCSearch',
+    display: 'name',
+    minLength: 2,
+    limit: 100,
+    source: bestPictures,
+    templates: {
+        empty: [
+            '<div class="empty-message">',
+            'no results found',
+            '</div>'
+        ].join('\n'),
+        suggestion: Handlebars.compile('<a href="{{url}}"><div><img src="{{img}}"/> <p>{{name}}<br/><span>{{line2}}</span></p></div></a>')
+    }
+}).on('typeahead:asyncrequest', function() {
+    //  $("#ajax_loader" ).hide();
+    $('.search-spinner').show();
+
+}).on('typeahead:asynccancel typeahead:asyncreceive', function() {
+    //  $("#ajax_loader" ).hide();
+    $('.search-spinner').hide();
+});
+
+$('.typeahead').bind('typeahead:select', function(ev, suggestion) {
+    // console.log('Selection: ' + suggestion);
+    if( $('#selsearch').val()) {
+        var gr = suggestion.gr;
+        var translit = suggestion.translit;
+        var lang=$("#frm-search-lang").val();
+
+        $("#search-block-form").attr("action", "/"+lang+"/"+gr+"/"+translit);
+
+    } else {
+        $("#search-block-form").attr("action", "/" );
+    }
+});
+
+$('#search-block-form').submit(function(event) {
+    var dest = $("#search-block-form").attr("action");
+
+    if(dest=='/'){
+        return false;
+    } else {
+        return true;
+    }
+
+});
